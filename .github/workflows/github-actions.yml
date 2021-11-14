@@ -12,15 +12,15 @@ jobs:
         include:
         - os: macos-latest
           TARGET: gpsclean
-          DATA: "model_42t_traces.h5:."
+          DATA: '"model_42t_traces.h5:."'
 
         - os: ubuntu-latest
           TARGET: gpsclean
-          DATA: "model_42t_traces.h5:."
+          DATA: '"model_42t_traces.h5:."'
 
         - os: windows-latest
           TARGET: gpsclean.exe
-          DATA: "model_42t_traces.h5;."
+          DATA: '"model_42t_traces.h5;."'
 
     steps: 
     - uses: actions/checkout@v2
