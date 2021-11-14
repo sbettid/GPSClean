@@ -5,7 +5,23 @@ on:
     - '*'
 jobs:
   Explore-GitHub-Actions:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+        - os: macos-latest
+          TARGET: gpsclean
+          DATA: "model_42t_traces.h5:."
+
+        - os: ubuntu-latest
+          TARGET: gpsclean
+          DATA: "model_42t_traces.h5:."
+
+        - os: windows-latest
+          TARGET: gpsclean.exe
+          DATA: "model_42t_traces.h5;."
+
     steps: 
     - uses: actions/checkout@v2
     - name: Set up Python
@@ -17,8 +33,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Building
-      run: pyinstaller -F --add-data "model_42t_traces.h5;." gpsclean.py
+      run: pyinstaller -F --add-data ${{matrix.DATA}} gpsclean.py
     - uses: actions/upload-artifact@v2
       with:
-        name: gpsclean-windows
-        path: dist/gpsclean.exe
+        name: gpsclean-${{matrix.os}}
+        path: dist/${{matrix.TARGET}}
