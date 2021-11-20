@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['gpsclean.py'],
-             pathex=['C:\\Users\\Davide\\Documents\\unibz\\2_Master\\Tesi\\gpsclean'],
+             pathex=['C:\\Users\\Davide\\Documents\\unibz\\2_Master\\Tesi\\GPSClean_github\\GPSClean'],
              binaries=[],
              datas=[('model_42t_traces.h5', '.')],
              hiddenimports=[],

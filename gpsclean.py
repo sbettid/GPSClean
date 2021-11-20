@@ -1,5 +1,6 @@
 #prevent tensorflow warnings to appear 
 import os
+from os import path
 import sys
 os.environ['TF_CPP_MIN_LOG_LEVEL']='3' #or any {'0','1','2'} 
 os.environ['AUTOGRAPH_VERBOSITY'] = '0'
@@ -72,7 +73,8 @@ deltas = gt.create_deltas(points, times)
 print("Loading the model...")
 try:
     # PyInstaller creates a temp folder and stores path in _MEIPASS
-    base_path = sys._MEIPASS
+    print("File path is: ", Path(__file__).absolute().parent)
+    base_path = Path(__file__).absolute().parent
 except Exception:
     base_path = os.path.abspath(".")
     
