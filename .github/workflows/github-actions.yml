@@ -1,8 +1,6 @@
 name: Building GPSClean
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
 jobs:
