@@ -72,11 +72,6 @@ deltas = gt.create_deltas(points, times)
 #load the already trained model
 print("Loading the model...")
 dirPath = Path(__file__).absolute().parent
-print("File path is: ", Path(__file__).absolute().parent)    
-list_file_dir = Path(__file__).absolute().parent
-files = [f.name for f in list_file_dir.iterdir()]
-print("Files: ")
-print(files)
 model_path = dirPath.joinpath("model_42t_traces.h5")
 
 model = keras.models.load_model(model_path)
