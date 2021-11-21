@@ -2,7 +2,7 @@ name: Building GPSClean
 on:
   push:
     tags:
-      - '*'
+    - '*'
 jobs:
   GPSClean-Release:
     runs-on: windows-latest
