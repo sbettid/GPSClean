@@ -56,12 +56,21 @@ The proposed variation applies two separate Kalman Filters for each detected err
 
 The corrected version of the trace is then exported in the GPX format. 
 
-## Downloading the application
+## Running the application
+
+In order to run the application, please follow the subsequent steps: 
+
+1) Clone the repository and open a shell in the main folder
+2) Execute `pip install -r requirements.txt` to install the required libraries
+3) Now you are ready to clean your first GPS trace by executing the following command: `python gpsclean.py path/to/your_trace.gpx`
+4) In the same folder where the original trace resides, you will find a cleaned version of the trace with the suffix "_cleaned"
+
+## Downloading a pre-built all-in-one executable
+
+On the other hand, if you prefer to download a all-in-one executable which does not require any prior software installed (not even Python), you can find pre-built all-in-one packages in the [Release section](https://github.com/sbettid/GPSClean/releases) of this repository. 
 
 
-
-
-## How to manually create the executable
+## How to manually create the all-in-one executable
 
 1) Clone the repository and open a shell in the main folder
 2) Execute the following command: `pyinstaller -F --add-data "model_42t_traces.h5;." gpsclean.py`
