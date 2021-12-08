@@ -27,10 +27,6 @@ set_verbosity(0)
 #current version of the program
 __VERSION__ = "0.0.1-beta"
 
-#print program name using ascii art
-tprint("GPSClean")
-print("Version: ", __VERSION__, "\n\n")
-
 #add description of the program in the arguments parser 
 parser=argparse.ArgumentParser(description='Applies a machine learning model to recognise errors in your GPX input trace.\nThe output is represented by the corrected version of your trace, always in the GPX format (Kalman filters are applied on outliers at this stage).\n Optionally, you can have as a second output the original trace with the predicted errors in the GeoJSON format (you can view and inspect it on https://api.dawnets.unibz.it/ ).\nFor more info please visit: https://gitlab.inf.unibz.it/gps-clean/transform-and-model', formatter_class=RawTextHelpFormatter)
 
@@ -41,11 +37,14 @@ parser.add_argument("input_trace",help="Your input GPS trace in the GPX format. 
 parser.add_argument("-op","--outputPredictions",help="Output predicted points in a GeoJSON file", action="store_true")
 #add argument: integer to represent the chosen R parameters for the measurement nois (optional)
 parser.add_argument("-r","--RMeasurementNoise",type=float, default=4.9, help="R parameter representing the measurement noise for the Kalman Filter")
-
+#add argument: print program version and exit
+parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __VERSION__)
 #parse the arguments 
 args = parser.parse_args()
 
-#print("R is ", args.RMeasurementNoise)
+#print program name using ascii art
+tprint("GPSClean")
+print("Version: ", __VERSION__, "\n\n")
 
 #define dictionary of labels 
 labels_dict ={ 0: 'Correct', 1 : 'Pause', 2 : 'Outlier', 3 : 'Indoor' }

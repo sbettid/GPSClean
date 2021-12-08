@@ -392,7 +392,7 @@ def full_kalman_smoothing(points, times):
    
     corrected_points = np.array(corrected_points)
 
-    print("Filtered points: ", corrected_points.shape)
+    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
     
@@ -638,7 +638,7 @@ def separate_kalman_smoothing(points, times, predictions):
    
     corrected_points = np.array(corrected_points)
 
-    print("Filtered points: ", corrected_points.shape)
+    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
 
@@ -859,6 +859,6 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
    
     corrected_points = np.array(corrected_points)
 
-    print("Filtered points: ", corrected_points.shape)
+    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
