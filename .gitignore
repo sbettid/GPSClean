@@ -1,6 +1,7 @@
 build/*
 dist/*
 traces_and_results/*
+tflite_tests/*
 __pycache__
 .ipynb_checkpoints
 pyinstaller_command.txt
