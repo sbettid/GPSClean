@@ -5,10 +5,10 @@ block_cipher = None
 
 
 a = Analysis(['gpsclean.py'],
-             pathex=['C:\\Users\\Davide\\Documents\\unibz\\2_Master\\Tesi\\GPSClean_github\\GPSClean'],
+             pathex=['C:\\Users\\Davide\\Documents\\unibz\\2_Master\\Tesi\\GPSClean_github\\gpsclean\\src\\gpsclean'],
              binaries=[],
-             datas=[('model_42t_traces.h5', '.')],
-             hiddenimports=[],
+             datas=[('data/model_42t_traces.h5', 'data')],
+             hiddenimports=['tensorflow.python.keras.engine.base_layer_v1'],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],
