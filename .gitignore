@@ -1,8 +1,9 @@
 build/*
 dist/*
-traces_and_results/*
-tflite_tests/*
+src/gpsclean/build/*
+src/gpsclean/dist/*
+src/gpsclean/traces_and_results/*
+src/gpsclean/tflite_tests/*
 __pycache__
 .ipynb_checkpoints
 pyinstaller_command.txt
-Colle*.gpx
