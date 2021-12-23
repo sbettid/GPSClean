@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: gpsclean
-Version: 0.2.0
+Version: 0.3.0
 Summary: An application to correct a GPS trace using machine learning techniques
 Home-page: https://github.com/sbettid/GPSClean
 Author: Davide Sbetti
@@ -11,7 +11,7 @@ Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.6
+Requires-Python: >=3.7, <3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
@@ -89,6 +89,6 @@ On the other hand, if you prefer to download a all-in-one executable which does 
 ## How to manually create the all-in-one executable
 
 1) Clone the [repository](https://github.com/sbettid/GPSClean) and open a shell in the `src/gpsclean` folder
-2) Execute the following command: `pyinstaller -F --add-data "data/model_42t_traces.h5;." gpsclean.py`
+2) Execute the following command: `pyinstaller -F --add-data "data/model_42t_traces.h5;data" gpsclean.py`
 3) At the end of the process, a dist folder can be found inside the `src/gpsclean` folder, containing the packaged executable. 
 

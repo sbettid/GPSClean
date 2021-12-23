@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gpsclean",
-    version="0.2.0",
+    version="0.3.0",
     author="Davide Sbetti",
     author_email="davide.sbetti@gmail.com",
     description="An application to correct a GPS trace using machine learning techniques",
@@ -22,21 +22,20 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
-    python_requires=">=3.6",
+    python_requires=">=3.7, <3.10",
     install_requires=[
         "art==5.3",
         "filterpy==1.4.5",
         "geojson==2.5.0",
         "gpxpy==1.4.2",
-        "tensorflow==2.7.0",
-        "pandas==0.25.3",
-        "scipy==1.6.1",
-        "pyproj==3.1.0",
-        "numpy==1.21.4",
-        "pyinstaller==4.5.1",
+        "tflite_runtime>=2.5.0",
+        "pandas>=0.25.3",
+        "scipy>=1.6.1",
+        "pyproj>=3.0.0",
+        "numpy>=1.20.0",
     ],
     package_data={
-         "gpsclean": ["data/*.h5"],
+         "gpsclean": ["data/*.tflite"],
     },
     entry_points={
     'console_scripts': [

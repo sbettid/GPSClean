@@ -3,7 +3,6 @@
 import numpy as np
 import pyproj
 import sys
-from tensorflow import squeeze
 import pandas as pd
 
 #setting max int used for masking
@@ -41,7 +40,7 @@ def get_train_data(X,y, indices, ids):
 
 
 #this function is used to predict a newly acquired trace, given an already trained model 
-def predict_trace(model, trace, window_size, step):
+def predict_trace(interpreter, trace, window_size, step):
     
     segments = []
     indices = []
@@ -57,18 +56,14 @@ def predict_trace(model, trace, window_size, step):
             segmentAdded = False
             #as usual, if we have room for an entire segment just take it
             if point_index + window_size < len(trace):
-                
-                #if sum(label[act_counter - 1][point_index:point_index+window_size]) > 0:
-                
+                                
                 #append segment and indices
                 segments.append(trace[point_index:point_index+window_size])
 
 
                 cur_indices = np.arange(point_index,point_index+window_size)
                 indices.append(cur_indices)
-
-                #segmentAdded = True
-                
+ 
             else: #otherwise we need first to pad
                 #pad first segment and label
                 cur_segment = trace[point_index:]
@@ -91,22 +86,33 @@ def predict_trace(model, trace, window_size, step):
     segments = np.array(segments)
     indices = np.array(indices)
     
-   
+    #setup the tflite interpreter
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
     
-    #print(segments.shape)
-    #print(labels.shape)
-    #print(indices.shape)
-    #print(ids.shape)
+    input_index = input_details[0]["index"]
     
-    #predictions = model.predict_classes(segments)
+    interpreter.allocate_tensors()
+    
     #get prediction for each segment
-    #use the model to predict the segments
-    predictions_raw = model.predict(segments)
+    #use the model to predict each segment
+    predicted_segments = None
+    for segment in segments:
+        single_segment = np.array([segment]).astype(np.float32)
+        interpreter.set_tensor(input_index, single_segment)
+        
+        interpreter.invoke()
+        
+        current_prediction = np.array(interpreter.get_tensor(output_details[0]['index']))
+        
+        if predicted_segments is None:
+            predicted_segments = current_prediction
+        else:
+            predicted_segments = np.concatenate((predicted_segments, current_prediction), axis = 0)
+    
     #take the class with the largest probability
-    predictions=np.argmax(predictions_raw,axis=2)
-    
-    #print("Predictions shape: ", predictions.shape)
-    
+    predictions=np.argmax(predicted_segments,axis=2)
+        
     #return everything
     return segments, indices, predictions
 
@@ -129,7 +135,7 @@ def compress_delta_corrections(segments, indices, predictions):
         for j in range(len(indices[i])):
             if not indices[i][j] == max_int and not predictions[indices[i][j]] < 2:
                 #print("Point at indices", i, " ", j, " : ")
-                points[indices[i][j]]['coords'] += squeeze(segments[i])[j]
+                points[indices[i][j]]['coords'] += np.squeeze(segments[i])[j]
                 points[indices[i][j]]['count'] += 1
            
             

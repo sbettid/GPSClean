@@ -13,4 +13,4 @@ src/gpsclean.egg-info/dependency_links.txt
 src/gpsclean.egg-info/entry_points.txt
 src/gpsclean.egg-info/requires.txt
 src/gpsclean.egg-info/top_level.txt
-src/gpsclean/data/model_42t_traces.h5
+src/gpsclean/data/model_42t_traces.tflite

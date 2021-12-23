@@ -2,8 +2,6 @@
 import os
 from pathlib import Path
 import sys
-os.environ['TF_CPP_MIN_LOG_LEVEL']='3' #or any {'0','1','2'} 
-os.environ['AUTOGRAPH_VERBOSITY'] = '0'
 
 #import libraries 
 import gpxpy
@@ -11,21 +9,15 @@ import gpxpy.gpx
 import numpy as np
 from gpsclean import gpsclean_transform as gt
 from gpsclean import FullTraining as ft
-from tensorflow import keras
-from tensorflow.autograph import set_verbosity
+import tflite_runtime.interpreter as tflite
 from gpsclean import Correction as tc
 from geojson import Feature, LineString, FeatureCollection, dump
 import argparse
 from argparse import RawTextHelpFormatter
 from art import *
-import logging
-logging.getLogger("tensorflow").setLevel(logging.ERROR)
-
-#deactivate autograph warnings in tensorflow
-set_verbosity(0)
 
 #current version of the program
-__VERSION__ = "0.2.0"
+__VERSION__ = "0.3.0"
 
 def main():
 
@@ -73,23 +65,23 @@ def main():
     #load the already trained model
     print("Loading the model...")
     dirPath = Path(__file__).absolute().parent
-    model_path = dirPath.joinpath("data/model_42t_traces.h5")
-
-    model = keras.models.load_model(model_path)
-
+    modelPath = dirPath.joinpath("data/model_42t_traces.tflite")
+    print("Model path: ", str(modelPath))
+    interpreter = tflite.Interpreter(model_path=str(modelPath))
+    print("Model loaded")
     #predict the trace, creating segments using a window of 15 points and a step of 2 
     print("Predicting points...")
-    segments, indices, predictions = ft.predict_trace(model, deltas, 15, 2)
+    segments, indices, predictions = ft.predict_trace(interpreter, deltas, 15, 2)
 
     #compress the predictions obtaining a point to point prediction
     pred_points = ft.compress_trace_predictions(predictions, indices, 4)
-
+    
     #insert prediction for starting point, assumed to be correct 
     full_pred_points=np.insert(pred_points, 0, 0)
 
     #remove the pauses 
     reduced_points, reduced_times, reduced_delta, reduced_predictions, original_trace, original_times = tc.remove_pauses(points[:,:3], times, full_pred_points, None)
-
+    
     #now we can correct all other points using Kalman Filters only on them
     print("Correcting outliers...")
     kalman_trace, kalman_times = tc.separate_bidirectional_kalman_smoothing(reduced_points, reduced_times,
