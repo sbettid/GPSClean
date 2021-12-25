@@ -10,6 +10,7 @@ import numpy as np
 from gpsclean import gpsclean_transform as gt
 from gpsclean import FullTraining as ft
 import tflite_runtime.interpreter as tflite
+import tflite_runtime
 from gpsclean import Correction as tc
 from geojson import Feature, LineString, FeatureCollection, dump
 import argparse
@@ -66,9 +67,8 @@ def main():
     print("Loading the model...")
     dirPath = Path(__file__).absolute().parent
     modelPath = dirPath.joinpath("data/model_42t_traces.tflite")
-    print("Model path: ", str(modelPath))
     interpreter = tflite.Interpreter(model_path=str(modelPath))
-    print("Model loaded")
+    
     #predict the trace, creating segments using a window of 15 points and a step of 2 
     print("Predicting points...")
     segments, indices, predictions = ft.predict_trace(interpreter, deltas, 15, 2)

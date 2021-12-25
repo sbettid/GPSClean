@@ -60,7 +60,7 @@ The corrected version of the trace is then exported in the GPX format.
 
 In order to run the application, please follow the subsequent steps: 
 
-1) Install the package by executing the following command: `pip install -i https://test.pypi.org/simple/ gpsclean`
+1) Install the package by executing the following command: `pip install -i https://test.pypi.org/simple/ --extra-index-url https://google-coral.github.io/py-repo/ gpsclean`
 2) Now you are ready to clean your first GPS trace by executing the following command: `gpsclean path/to/your_trace.gpx`
 3) In the same folder where the original trace resides, you will find a cleaned version of the trace with the suffix "_cleaned"
 
