@@ -2,9 +2,8 @@ art==5.3
 filterpy==1.4.5
 geojson==2.5.0
 gpxpy==1.4.2
-tensorflow==2.7.0
-pandas==0.25.3
-scipy==1.6.1
-pyproj==3.1.0
-numpy==1.21.4
-pyinstaller==4.5.1
+tflite-runtime>=2.5.0.post1
+pandas>=0.25.3
+scipy>=1.6.1
+pyproj>=3.0.0
+numpy>=1.20.0
