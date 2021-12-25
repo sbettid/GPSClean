@@ -1,7 +1,23 @@
 import setuptools
+import sys
+import platform
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
+#get version for tflite-runtime    
+#cur_version = str(sys.version_info[0]) + "" + str(sys.version_info[1])
+#m_char = ''
+#if cur_version == '37':
+#    m_char = 'm'
+
+#cur_os = "linux_x86_64"
+#os_signature = platform.system()
+#if "Windows" in os_signature:
+#    cur_os = "win_amd64"
+#elif "Darwin" in os_signature:
+#    cur_os = "macosx_11_0_x86_64"
+
+#tflite = "tflite_runtime>=2.5.0@https://github.com/google-coral/pycoral/releases/download/v2.0.0/tflite_runtime-2.5.0.post1-cp{}-cp{}{}-{}.whl".format(cur_version,cur_version, m_char, cur_os)
 
 setuptools.setup(
     name="gpsclean",
@@ -28,7 +44,7 @@ setuptools.setup(
         "filterpy==1.4.5",
         "geojson==2.5.0",
         "gpxpy==1.4.2",
-        "tflite_runtime>=2.5.0",
+        "tflite-runtime>=2.5.0",
         "pandas>=0.25.3",
         "scipy>=1.6.1",
         "pyproj>=3.0.0",
