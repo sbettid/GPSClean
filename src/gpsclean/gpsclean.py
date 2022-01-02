@@ -12,24 +12,27 @@ from gpsclean import FullTraining as ft
 import tflite_runtime.interpreter as tflite
 import tflite_runtime
 from gpsclean import Correction as tc
-from geojson import Feature, LineString, FeatureCollection, dump
+from geojson import Feature, LineString, FeatureCollection, Point, dump
 import argparse
 from argparse import RawTextHelpFormatter
 from art import *
+import matplotlib
 
 #current version of the program
-__VERSION__ = "0.3.0"
+__VERSION__ = "0.4.0"
 
 def main():
 
     #add description of the program in the arguments parser 
-    parser=argparse.ArgumentParser(description='Applies a machine learning model to recognise errors in your GPX input trace.\nThe output is represented by the corrected version of your trace, always in the GPX format (Kalman filters are applied on outliers at this stage).\n Optionally, you can have as a second output the original trace with the predicted errors in the GeoJSON format (you can view and inspect it on https://api.dawnets.unibz.it/ ).\nFor more info please visit: https://gitlab.inf.unibz.it/gps-clean/transform-and-model', formatter_class=RawTextHelpFormatter)
+    parser=argparse.ArgumentParser(description='Applies a machine learning model to recognise errors in your GPX input trace.\nThe output is represented by the corrected version of your trace, always in the GPX format (Kalman filters are applied on outliers at this stage).\nOptionally, you can have as a second output the original trace with the predicted errors in the GeoJSON format (you can view and inspect it on https://api.dawnets.unibz.it/ ).\nMoreover, a third option is to have the mean of the predictions for each point as output, represented by a continuous color (correct = green, pause = yellow, outlier = red, indoor = gray). The output GeoJSON can be visually inspected at: https://geojson.io. \n\nFor more info please visit: https://gitlab.inf.unibz.it/gps-clean/transform-and-model', formatter_class=RawTextHelpFormatter)
 
     #add argument: input trace in GPX format (mandatory)
     parser.add_argument("input_trace",help="Your input GPS trace in the GPX format. Example: gps_trace.gpx")
 
     #add argument: boolean to output also the predictions (optional)
-    parser.add_argument("-op","--outputPredictions",help="Output predicted points in a GeoJSON file", action="store_true")
+    parser.add_argument("-op","--outputPredictions",help="Output predicted points in a GeoJSON file (_predicted)", action="store_true")
+    #add argument: boolean to output also the mean predictions colored (optional)
+    parser.add_argument("-mpc","--meanPredictionColored",help="Output the mean prediction of each point with its continuous color (correct = green, pause = yellow, outlier = red, indoor = gray) in a GeoJSON file (_predictedColors)", action="store_true")
     #add argument: integer to represent the chosen R parameters for the measurement nois (optional)
     parser.add_argument("-r","--RMeasurementNoise",type=float, default=4.9, help="R parameter representing the measurement noise for the Kalman Filter")
     #add argument: print program version and exit
@@ -74,10 +77,11 @@ def main():
     segments, indices, predictions = ft.predict_trace(interpreter, deltas, 15, 2)
 
     #compress the predictions obtaining a point to point prediction
-    pred_points = ft.compress_trace_predictions(predictions, indices, 4)
+    pred_points, mean_pred_points = ft.compress_trace_predictions(predictions, indices, 4)
     
     #insert prediction for starting point, assumed to be correct 
     full_pred_points=np.insert(pred_points, 0, 0)
+    full_mean_pred_points=np.insert(mean_pred_points, 0, 0)
 
     #remove the pauses 
     reduced_points, reduced_times, reduced_delta, reduced_predictions, original_trace, original_times = tc.remove_pauses(points[:,:3], times, full_pred_points, None)
@@ -167,6 +171,28 @@ def main():
         #write on file
         with open(filename + "_predicted.geojson", 'w') as f:
             dump(feature_collection, f)
-
+    
+    #check if we need to output also the mean colored predictions 
+    if args.meanPredictionColored:
+        print("Exporting also mean predictions colored...")
+        colorMap = matplotlib.colors.LinearSegmentedColormap.from_list('my_colormap', ['green', 'yellow', 'red', 'gray'])
+        norm = matplotlib.colors.Normalize(vmin=0, vmax=3)
+        mappable = matplotlib.cm.ScalarMappable(norm=norm, cmap=colorMap)
+                
+        features = []
+        for i in range(points.shape[0]):
+            cur_point = Point((points[i][0], points[i][1], points[i][2]))
+            rgba = mappable.to_rgba(full_mean_pred_points[i])
+            color = matplotlib.colors.rgb2hex(rgba)
+            cur_properties = {'marker-color': color, 'marker-size': 'small', 'meanPrediction': float(full_mean_pred_points[i]), 'prediction': int(full_pred_points[i]), 'id': int(i)}
+            cur_feature = Feature(geometry = cur_point, properties = cur_properties)
+            features.append(cur_feature)
+        
+        feature_collection = FeatureCollection(features)
+        
+        #write on file
+        with open(filename + "_predictedColors.geojson", 'w') as f:
+            dump(feature_collection, f)
+        
 if __name__ == '__main__':
     main()
