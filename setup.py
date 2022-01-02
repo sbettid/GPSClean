@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gpsclean",
-    version="0.3.0",
+    version="0.4.0",
     author="Davide Sbetti",
     author_email="davide.sbetti@gmail.com",
     description="An application to correct a GPS trace using machine learning techniques",
@@ -35,6 +35,7 @@ setuptools.setup(
         "scipy>=1.6.1",
         "pyproj>=3.0.0",
         "numpy>=1.20.0",
+        "matplotlib>=3.0.0",
     ],
     package_data={
          "gpsclean": ["data/*.tflite"],

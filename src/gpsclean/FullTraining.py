@@ -164,27 +164,31 @@ def compress_trace_predictions(predictions, indices, n_classes):
     #crate the points labels matrix
     unique_indices = np.unique(indices.flatten())
     points = { key : np.zeros(n_classes) for key in unique_indices}
+    means = { key : 0 for key in unique_indices}
     
     #loop over predictions and update the correspondent label
     for k in range(predictions.shape[0]):
         for j in range(predictions.shape[1]):
             points[indices[k][j]][predictions[k][j]] += 1
-                
+            means[indices[k][j]] += predictions[k][j]
             
-    #apply majority voting and record multiple classifications for statistics use
-    for point in points: 
+    #apply majority voting but keep track also of the mean, in case the user wants it as output
+    for point in points:
+        means[point] = means[point]/np.sum(points[point])
         points[point] = np.argmax(points[point])
         
     #rebuild the trace sorting the points
     sorted_keys = sorted(points)
     
     trace_predictions = []
+    trace_mean_prediction = []
     
-    for key in sorted_keys: #the for each point
+    for key in sorted_keys: #then for each point
         if not key == max_int:
             trace_predictions.append(points[key]) #we append to the list the final prediction
+            trace_mean_prediction.append(means[key]) #... and the mean prediction
             
-    return np.array(trace_predictions)
+    return np.array(trace_predictions), np.array(trace_mean_prediction)
 
 
 def convert_to_ECEF(points):

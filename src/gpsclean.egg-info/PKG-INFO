@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: gpsclean
-Version: 0.3.0
+Version: 0.4.0
 Summary: An application to correct a GPS trace using machine learning techniques
 Home-page: https://github.com/sbettid/GPSClean
 Author: Davide Sbetti
@@ -77,18 +77,9 @@ The corrected version of the trace is then exported in the GPX format.
 
 In order to run the application, please follow the subsequent steps: 
 
-1) Install the package by executing the following command: `pip install -i https://test.pypi.org/simple/ --extra-index-url https://google-coral.github.io/py-repo/ gpsclean`
-2) Now you are ready to clean your first GPS trace by executing the following command: `gpsclean path/to/your_trace.gpx`
-3) In the same folder where the original trace resides, you will find a cleaned version of the trace with the suffix "_cleaned"
+1) Download the last released package from the [Release section](https://github.com/sbettid/GPSClean/releases) of this repository. 
+2) Install the downloaded package by executing the following command: `pip install --extra-index-url https://google-coral.github.io/py-repo/ gpsclean-x.y.z-py3-none-any.whl`
+3) Now you are ready to clean your first GPS trace by executing the following command: `gpsclean path/to/your_trace.gpx`
+4) In the same folder where the original trace resides, you will find a cleaned version of the trace with the suffix "_cleaned"
 
-## Downloading a pre-built all-in-one executable
-
-On the other hand, if you prefer to download a all-in-one executable which does not require any prior software installed (not even Python), you can find pre-built all-in-one packages in the [Release section](https://github.com/sbettid/GPSClean/releases) of the repository. 
-
-
-## How to manually create the all-in-one executable
-
-1) Clone the [repository](https://github.com/sbettid/GPSClean) and open a shell in the `src/gpsclean` folder
-2) Execute the following command: `pyinstaller -F --add-data "data/model_42t_traces.h5;data" gpsclean.py`
-3) At the end of the process, a dist folder can be found inside the `src/gpsclean` folder, containing the packaged executable. 
 
