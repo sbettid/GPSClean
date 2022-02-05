@@ -19,7 +19,7 @@ from art import *
 import matplotlib
 
 #current version of the program
-__VERSION__ = "0.4.0"
+__VERSION__ = "1.0.0"
 
 def main():
 
@@ -69,7 +69,7 @@ def main():
     #load the already trained model
     print("Loading the model...")
     dirPath = Path(__file__).absolute().parent
-    modelPath = dirPath.joinpath("data/model_42t_traces.tflite")
+    modelPath = dirPath.joinpath("data/model.tflite")
     interpreter = tflite.Interpreter(model_path=str(modelPath))
     
     #predict the trace, creating segments using a window of 15 points and a step of 2 
