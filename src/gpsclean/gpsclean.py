@@ -63,6 +63,17 @@ def main():
 
     points = np.array(points)
     times = np.array(times)
+
+    # check we have at least a point
+    if points.size == 0:
+        print("""TRACE ERROR:
+No points have been detected in your GPS trace. Please note the tool expects
+at least a track with a segment containing a point to be considered valid and
+waypoints are excluded.
+You can consult https://wiki.openstreetmap.org/wiki/GPX for more.
+              """)
+        return
+
     #create the deltas using the associated function 
     deltas = gt.create_deltas(points, times)
 
