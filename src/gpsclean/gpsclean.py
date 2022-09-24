@@ -19,7 +19,7 @@ from art import *
 import matplotlib
 
 #current version of the program
-__VERSION__ = "1.0.0"
+__VERSION__ = "1.0.1"
 
 def main():
 

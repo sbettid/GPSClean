@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gpsclean",
-    version="1.0.0",
+    version="1.0.1",
     author="Davide Sbetti",
     author_email="davide.sbetti@gmail.com",
     description="An application to correct a GPS trace using machine learning techniques",
