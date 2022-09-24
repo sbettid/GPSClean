@@ -1,13 +1,11 @@
 Metadata-Version: 2.1
 Name: gpsclean
-Version: 1.0.0
+Version: 1.0.1
 Summary: An application to correct a GPS trace using machine learning techniques
 Home-page: https://github.com/sbettid/GPSClean
 Author: Davide Sbetti
 Author-email: davide.sbetti@gmail.com
-License: UNKNOWN
 Project-URL: Bug Tracker, https://github.com/sbettid/GPSClean/issues
-Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -81,5 +79,3 @@ In order to run the application, please follow the subsequent steps:
 2) Install the downloaded package by executing the following command: `pip install --extra-index-url https://google-coral.github.io/py-repo/ gpsclean-x.y.z-py3-none-any.whl`
 3) Now you are ready to clean your first GPS trace by executing the following command: `gpsclean path/to/your_trace.gpx`
 4) In the same folder where the original trace resides, you will find a cleaned version of the trace with the suffix "_cleaned"
-
-
