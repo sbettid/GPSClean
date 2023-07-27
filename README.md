@@ -6,6 +6,8 @@
 
 GPSClean is an Open Source application developed with the goal of automatically detect and correct errors in GPS traces, exported in the widely adopted GPX format, using machine learning techniques and without prior geographical knowledge. It is the result of the research undertaken for my thesis project during the Master in Computational Data Science (University of Bolzano). 
 
+Would you like to know more about the underlying research? Well, then just read the [associated paper](https://www.thinkmind.org/index.php?view=article&articleid=signal_2022_1_10_60003)!
+
 Feel free to try the application and report any feedback on the project's [Github page](https://github.com/sbettid/GPSClean). 
 
 ### How does it work?
