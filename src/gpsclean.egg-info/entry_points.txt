@@ -1,2 +1,2 @@
 [console_scripts]
-gpsclean = gpsclean.gpsclean:main
+gpsclean = gpsclean.main:main

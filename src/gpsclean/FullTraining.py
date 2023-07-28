@@ -3,7 +3,6 @@
 import numpy as np
 import pyproj
 import sys
-import pandas as pd
 
 #setting max int used for masking
 max_int = sys.maxsize

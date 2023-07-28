@@ -1,13 +1,14 @@
 import numpy as np
-import pyproj
+from pyproj import Transformer
 import sys
-from datetime import datetime
 
 #setting max int used for masking
 max_int = sys.maxsize
 
-ecef = pyproj.Proj(proj='geocent', ellps='WGS84', datum='WGS84')
-lla = pyproj.Proj(proj='latlong', ellps='WGS84', datum='WGS84')
+ecef = {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'}
+lla = {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'}
+
+transformer = Transformer.from_crs(lla, ecef)
 
 def create_deltas(points, times):
     
@@ -22,7 +23,7 @@ def create_deltas(points, times):
         
         if alt is not None:
             
-            x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
+            x, y, z = transformer.transform(lon, lat, alt, radians=False)
             
             #append
             features.append([x,y,z])

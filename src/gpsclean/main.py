@@ -1,27 +1,23 @@
-#prevent tensorflow warnings to appear 
-import os
-from pathlib import Path
-import sys
-
 #import libraries 
 import gpxpy
 import gpxpy.gpx
 import numpy as np
-from gpsclean import gpsclean_transform as gt
-from gpsclean import FullTraining as ft
+from . import gpsclean_transform as gt
+from . import FullTraining as ft
+from . import _version as v
 import tflite_runtime.interpreter as tflite
-import tflite_runtime
-from gpsclean import Correction as tc
+from . import Correction as tc
 from geojson import Feature, LineString, FeatureCollection, Point, dump
 import argparse
 from argparse import RawTextHelpFormatter
 from art import *
 import matplotlib
+from pathlib import Path
 
-#current version of the program
-__VERSION__ = "1.0.1"
 
-def main():
+def main(args=None):
+
+    __version__ = v.__version__
 
     #add description of the program in the arguments parser 
     parser=argparse.ArgumentParser(description='Applies a machine learning model to recognise errors in your GPX input trace.\nThe output is represented by the corrected version of your trace, always in the GPX format (Kalman filters are applied on outliers at this stage).\nOptionally, you can have as a second output the original trace with the predicted errors in the GeoJSON format (you can view and inspect it on https://api.dawnets.unibz.it/ ).\nMoreover, a third option is to have the mean of the predictions for each point as output, represented by a continuous color (correct = green, pause = yellow, outlier = red, indoor = gray). The output GeoJSON can be visually inspected at: https://geojson.io. \n\nFor more info please visit: https://gitlab.inf.unibz.it/gps-clean/transform-and-model', formatter_class=RawTextHelpFormatter)
@@ -36,13 +32,13 @@ def main():
     #add argument: integer to represent the chosen R parameters for the measurement nois (optional)
     parser.add_argument("-r","--RMeasurementNoise",type=float, default=4.9, help="R parameter representing the measurement noise for the Kalman Filter")
     #add argument: print program version and exit
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __VERSION__)
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__)
     #parse the arguments 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     #print program name using ascii art
     tprint("GPSClean")
-    print("Version: ", __VERSION__, "\n\n")
+    print("Version: ", __version__, "\n\n")
 
     #define dictionary of labels 
     labels_dict ={ 0: 'Correct', 1 : 'Pause', 2 : 'Outlier', 3 : 'Indoor' }
