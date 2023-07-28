@@ -5,8 +5,9 @@ setup.py
 src/gpsclean/Correction.py
 src/gpsclean/FullTraining.py
 src/gpsclean/__init__.py
-src/gpsclean/gpsclean.py
+src/gpsclean/_version.py
 src/gpsclean/gpsclean_transform.py
+src/gpsclean/main.py
 src/gpsclean.egg-info/PKG-INFO
 src/gpsclean.egg-info/SOURCES.txt
 src/gpsclean.egg-info/dependency_links.txt
@@ -14,3 +15,6 @@ src/gpsclean.egg-info/entry_points.txt
 src/gpsclean.egg-info/requires.txt
 src/gpsclean.egg-info/top_level.txt
 src/gpsclean/data/model.tflite
+src/tests/__init__.py
+src/tests/integration/__init__.py
+src/tests/integration/trace_cleaning_test.py

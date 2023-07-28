@@ -1,13 +1,16 @@
 import setuptools
-import sys
-import platform
+
+pkg_vars  = {}
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("src/gpsclean/_version.py") as fp:
+    exec(fp.read(), pkg_vars)
+
 setuptools.setup(
     name="gpsclean",
-    version="1.0.1",
+    version=pkg_vars['__version__'],
     author="Davide Sbetti",
     author_email="davide.sbetti@gmail.com",
     description="An application to correct a GPS trace using machine learning techniques",
@@ -42,7 +45,7 @@ setuptools.setup(
     },
     entry_points={
     'console_scripts': [
-        'gpsclean = gpsclean.gpsclean:main',
+        'gpsclean = gpsclean.main:main',
     ],
 },
 )

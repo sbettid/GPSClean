@@ -1,4 +1,4 @@
-from gpsclean.gpsclean import main
+from gpsclean.main import main
 import os
 
 class TestTraceCleaning:
