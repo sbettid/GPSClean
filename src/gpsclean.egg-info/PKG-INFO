@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: gpsclean
-Version: 1.0.1
+Version: 1.0.2
 Summary: An application to correct a GPS trace using machine learning techniques
 Home-page: https://github.com/sbettid/GPSClean
 Author: Davide Sbetti
