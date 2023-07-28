@@ -30,7 +30,7 @@ The second pre-processing step is the calculation of the deltas between two cons
 
 ### Error detection
 
-The error detection step is based on a previously trained machine learning model. The model, based on a neural network composed by Bidirectional LSTM (Long-Short Term Memory) cells, was trained on a set of annotated GPS traces, namely traces on which the errors were explicitly marked using an ad-hoc developed web-based tool: [Track annotation](https://api.dawnets.unibz.it/). 
+The error detection step is based on a previously trained machine learning model. The model, based on a neural network composed by Bidirectional LSTM (Long-Short Term Memory) cells, was trained on a set of annotated GPS traces, namely traces on which the errors were explicitly marked using an ad-hoc developed web-based tool. 
 
 The considered errors are the following: 
 

@@ -21,7 +21,7 @@ import matplotlib
 #current version of the program
 __VERSION__ = "1.0.1"
 
-def main():
+def main(args=None):
 
     #add description of the program in the arguments parser 
     parser=argparse.ArgumentParser(description='Applies a machine learning model to recognise errors in your GPX input trace.\nThe output is represented by the corrected version of your trace, always in the GPX format (Kalman filters are applied on outliers at this stage).\nOptionally, you can have as a second output the original trace with the predicted errors in the GeoJSON format (you can view and inspect it on https://api.dawnets.unibz.it/ ).\nMoreover, a third option is to have the mean of the predictions for each point as output, represented by a continuous color (correct = green, pause = yellow, outlier = red, indoor = gray). The output GeoJSON can be visually inspected at: https://geojson.io. \n\nFor more info please visit: https://gitlab.inf.unibz.it/gps-clean/transform-and-model', formatter_class=RawTextHelpFormatter)
@@ -38,7 +38,7 @@ def main():
     #add argument: print program version and exit
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + __VERSION__)
     #parse the arguments 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     #print program name using ascii art
     tprint("GPSClean")
