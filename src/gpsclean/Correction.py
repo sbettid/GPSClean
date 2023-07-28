@@ -1,6 +1,6 @@
 #this file contains the functions used to correct a trace based on the generated predictions
 import numpy as np
-import pyproj
+from pyproj import Transformer
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
 from scipy.linalg import block_diag
@@ -9,8 +9,11 @@ from datetime import datetime
 
 
 #defining conversions between the two used coordinates systems
-ecef = pyproj.Proj(proj='geocent', ellps='WGS84', datum='WGS84')
-lla = pyproj.Proj(proj='latlong', ellps='WGS84', datum='WGS84')
+ecef = {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'}
+lla = {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'}
+
+lla_to_ecef_transformer = Transformer.from_crs(lla, ecef)
+ecef_to_lla_transform = Transformer.from_crs(ecef, lla)
 
 #value used for clipping the deltas correction of each epoch applied to outliers
 EPS = 0.1
@@ -29,9 +32,7 @@ def remove_pauses(all_coords, all_coordtimes, predictions, deltas):
     original_times = []
     
     cur_point = 0
-    
-    #print("Coords: ", all_coords.shape[0], ", Preds: ", predictions.shape)
-    
+        
     #if we have subtraces
     if len(np.array(all_coords[0]).shape) > 1:
         #loop over them and over their points
@@ -71,9 +72,6 @@ def remove_pauses(all_coords, all_coordtimes, predictions, deltas):
                         
                         if deltas is not None:
                             reduced_deltas.append(deltas[cur_point])
-                    
-                    #else:
-                        #print("Deleting pause point at index: ", cur_point, " with prediction: ", predictions[cur_point])
                         
                     cur_point += 1
    
@@ -94,7 +92,7 @@ def full_kalman_smoothing(points, times):
         point = points[i]
         #convert to ECEF
         lon, lat, alt = point[0], point[1], point[2]
-        x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
+        x, y, z = lla_to_ecef_transformer.transform(lon, lat, alt, radians=False)
         #append to data
         data.append(np.array([x,y,z]))
     
@@ -164,7 +162,6 @@ def full_kalman_smoothing(points, times):
         #update prediction based on measured value
         f1.update(np.array([long, lat, alt]).T)
 
-        #print(f1.x)
         #add updated version to array
         filterpy_data.append(np.array([f1.x[0][0], f1.x[2][0], f1.x[4][0]]))
     
@@ -179,21 +176,17 @@ def full_kalman_smoothing(points, times):
         y = filterpy_data[i][1]
         z = filterpy_data[i][2]
         #convert to lat long and append
-        lon, lat, alt = pyproj.transform(ecef, lla, x, y, z, radians=False)
+        lon, lat, alt = ecef_to_lla_transform.transform(x, y, z, radians=False)
         corrected_points.append(np.array([lon, lat, alt]))
    
     corrected_points = np.array(corrected_points)
-
-    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
     
     
 #correct the trace by applying a Kalman Filter on outliers only
 def kalman_smoothing(points, times, predictions):
-    
-    #print("Points shape: ", points.shape)
-    
+        
     #convert everything to ecef
     data = []
     
@@ -203,7 +196,7 @@ def kalman_smoothing(points, times, predictions):
         
         #convert values to ECEF
         lon, lat, alt = point[0], point[1], point[2]
-        x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
+        x, y, z = lla_to_ecef_transformer.transform(lon, lat, alt, radians=False)
         
         data.append(np.array([x,y,z]))
     
@@ -273,7 +266,6 @@ def kalman_smoothing(points, times, predictions):
         #if it is an outlier
         if predictions[i] >= 2:
             #append the corrected version
-        #print(f1.x)
             filterpy_data.append(np.array([f1.x[0][0], f1.x[2][0], f1.x[4][0]]))
         else:
             #otherwise keep the original one
@@ -292,12 +284,10 @@ def kalman_smoothing(points, times, predictions):
         y = filterpy_data[i][1]
         #z = filtered_state_means[i][2]
         z = filterpy_data[i][2]
-        lon, lat, alt = pyproj.transform(ecef, lla, x, y, z, radians=False)
+        lon, lat, alt = ecef_to_lla_transform.transform(x, y, z, radians=False)
         corrected_points.append(np.array([lon, lat, alt]))
    
     corrected_points = np.array(corrected_points)
-
-    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
 
@@ -305,9 +295,7 @@ def kalman_smoothing(points, times, predictions):
 
 #correct the trace by applying a separate Kalman Filter on each subtrace containing only outliers
 def separate_kalman_smoothing(points, times, predictions):
-    
-    print("Points shape: ", points.shape)
-    
+        
     #convert everything to ecef
     data = []
     
@@ -317,7 +305,7 @@ def separate_kalman_smoothing(points, times, predictions):
         
         #convert values to ECEF
         lon, lat, alt = point[0], point[1], point[2]
-        x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
+        x, y, z = lla_to_ecef_transformer.transform(lon, lat, alt, radians=False)
         
         data.append(np.array([x,y,z]))
     
@@ -425,21 +413,17 @@ def separate_kalman_smoothing(points, times, predictions):
         y = filterpy_data[i][1]
         #z = filtered_state_means[i][2]
         z = filterpy_data[i][2]
-        lon, lat, alt = pyproj.transform(ecef, lla, x, y, z, radians=False)
+        lon, lat, alt = ecef_to_lla_transform.transform(x, y, z, radians=False)
         corrected_points.append(np.array([lon, lat, alt]))
    
     corrected_points = np.array(corrected_points)
-
-    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
 
 
 #correct the trace by applying a separate Kalman Filter on each subtrace containing only outliers
 def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9):
-    
-    #print("Points shape: ", points.shape)
-    
+        
     #convert everything to ecef
     data = []
     
@@ -449,7 +433,7 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
         
         #convert values to ECEF
         lon, lat, alt = point[0], point[1], point[2]
-        x, y, z = pyproj.transform(lla, ecef, lon, lat, alt, radians=False)
+        x, y, z = lla_to_ecef_transformer.transform(lon, lat, alt, radians=False)
         
         data.append(np.array([x,y,z]))
     
@@ -466,8 +450,6 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
     time_deltas = []
     for i in range(1, len(datetimes)):
         time_deltas.append((datetimes[i] - datetimes[i-1]).total_seconds())
-
-
 
     
     #for each point but the first one
@@ -504,15 +486,11 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
     #check we do not have outlying areas at the end
     if isOutlier: #append current outlying area
         outliers.append({'start' : cur_start, 'end' : cur_end})
-            
-    #print("Number of outliers area: ", len(outliers))
-    
+                
     #for each outlying area
     corrected_areas = []
     for cur_outlier in outliers: 
             
-            
-        #print("Cur outlier area: ", cur_outlier['start'], " - ", cur_outlier['end'])     
         cur_outlier_corrected = []
 
         #create Kalman filter and go over trace from at most 5 points before
@@ -620,13 +598,8 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
 
             #append to list if point is incorrect
             if predictions[i] >= 2:
-                #print("\tCorrecting point: ", i)
-                #print("\t\tBefore sum: ", cur_outlier_corrected[cur_item]) 
-                #print("\t\tSumming: ",  np.array([f1.x[0][0], f1.x[2][0], f1.x[4][0]]))
                 cur_outlier_corrected[cur_item] += np.array([f1.x[0][0], f1.x[2][0], f1.x[4][0]])
-                #print("\t\tAfter sum: ", cur_outlier_corrected[cur_item]) 
                 cur_outlier_corrected[cur_item] /= 2
-                #print("\t\tMean: ", cur_outlier_corrected[cur_item]) 
                 
                 cur_item -= 1
             else:
@@ -634,7 +607,6 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
 
         #now apply correction
         cur_outlier_corrected = np.array(cur_outlier_corrected)
-        #print("\tCur outlier correction shape: ", cur_outlier_corrected.shape)
         data[cur_outlier['start'] : cur_outlier['end'] + 1][:] = cur_outlier_corrected
         
     #now convert back to lat lang
@@ -646,11 +618,9 @@ def separate_bidirectional_kalman_smoothing(points, times, predictions, R = 4.9)
         y = data[i][1]
         #z = filtered_state_means[i][2]
         z = data[i][2]
-        lon, lat, alt = pyproj.transform(ecef, lla, x, y, z, radians=False)
+        lon, lat, alt = ecef_to_lla_transform.transform(x, y, z, radians=False)
         corrected_points.append(np.array([lon, lat, alt]))
    
     corrected_points = np.array(corrected_points)
-
-    #print("Filtered points: ", corrected_points.shape)
     
     return corrected_points, times
