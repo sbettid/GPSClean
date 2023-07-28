@@ -2,12 +2,11 @@
 import gpxpy
 import gpxpy.gpx
 import numpy as np
-from gpsclean import gpsclean_transform as gt
-from gpsclean import FullTraining as ft
-from gpsclean import _version as v
+from . import gpsclean_transform as gt
+from . import FullTraining as ft
+from . import _version as v
 import tflite_runtime.interpreter as tflite
-import tflite_runtime
-from gpsclean import Correction as tc
+from . import Correction as tc
 from geojson import Feature, LineString, FeatureCollection, Point, dump
 import argparse
 from argparse import RawTextHelpFormatter
