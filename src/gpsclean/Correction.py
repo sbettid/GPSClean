@@ -4,7 +4,6 @@ from pyproj import Transformer
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
 from scipy.linalg import block_diag
-import pandas as pd
 from datetime import datetime
 
 

@@ -34,7 +34,6 @@ setuptools.setup(
         "geojson==2.5.0",
         "gpxpy==1.4.2",
         "tflite-runtime>=2.5.0.post1",
-        "pandas>=0.25.3",
         "scipy>=1.6.1",
         "pyproj>=3.0.0",
         "numpy>=1.20.0",
