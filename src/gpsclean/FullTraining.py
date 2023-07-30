@@ -1,15 +1,10 @@
 #This file contains functions used to perform the training on an entire dataset
 #and to predict a newly acquired trace
 import numpy as np
-import pyproj
 import sys
 
 #setting max int used for masking
-max_int = sys.maxsize
-
-ecef = pyproj.Proj(proj='geocent', ellps='WGS84', datum='WGS84')
-lla = pyproj.Proj(proj='latlong', ellps='WGS84', datum='WGS84')
-        
+max_int = sys.maxsize        
 
 #this function takes the generated segments and keeps those that
 #contain at least an annotated point. Points annotated as correct are then
@@ -44,11 +39,6 @@ def predict_trace(interpreter, trace, window_size, step):
     segments = []
     indices = []
     
-    annotatedIDs = set([])
-    notAnnotatedIDs = set([])
-    
-    act_counter = 1
-    
     #first, we need to generate segments
     for point_index in range(0,len(trace),step):
             
@@ -76,9 +66,7 @@ def predict_trace(interpreter, trace, window_size, step):
                 cur_ind = np.concatenate((np.arange(point_index,point_index+len(trace[point_index:])), ind_pad))
 
                 segments.append(cur_segment)
-                indices.append(cur_ind)    
-
-                      
+                indices.append(cur_ind)                     
     
     
     #convert to Numpy arrays
@@ -188,17 +176,3 @@ def compress_trace_predictions(predictions, indices, n_classes):
             trace_mean_prediction.append(means[key]) #... and the mean prediction
             
     return np.array(trace_predictions), np.array(trace_mean_prediction)
-
-
-def convert_to_ECEF(points):
-    
-    ecef_points = []
-    
-    for point in points:
-        cur_lon, cur_lat, cur_alt = point[0], point[1], point[2]
-        x, y, z = pyproj.transform(lla, ecef, cur_lon, cur_lat, cur_alt, radians=False)
-        
-        ecef_points.append(np.array([x, y, z]))
-        
-    
-    return np.array(ecef_points)
