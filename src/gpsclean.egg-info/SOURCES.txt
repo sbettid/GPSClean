@@ -5,7 +5,7 @@ setup.py
 src/gpsclean/Correction.py
 src/gpsclean/DateTimeUtil.py
 src/gpsclean/FullTraining.py
-src/gpsclean/KalmanFIlterFactory.py
+src/gpsclean/KalmanFilterFactory.py
 src/gpsclean/PointsUtil.py
 src/gpsclean/__init__.py
 src/gpsclean/_version.py
