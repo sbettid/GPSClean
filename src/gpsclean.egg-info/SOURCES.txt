@@ -3,10 +3,12 @@ README.md
 pyproject.toml
 setup.py
 src/gpsclean/Correction.py
+src/gpsclean/DateTimeUtil.py
 src/gpsclean/FullTraining.py
+src/gpsclean/KalmanFIlterFactory.py
+src/gpsclean/PointsUtil.py
 src/gpsclean/__init__.py
 src/gpsclean/_version.py
-src/gpsclean/gpsclean_transform.py
 src/gpsclean/main.py
 src/gpsclean.egg-info/PKG-INFO
 src/gpsclean.egg-info/SOURCES.txt

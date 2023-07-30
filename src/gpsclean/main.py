@@ -2,7 +2,7 @@
 import gpxpy
 import gpxpy.gpx
 import numpy as np
-from . import gpsclean_transform as gt
+from . import PointsUtil as gt
 from . import FullTraining as ft
 from . import _version as v
 import tflite_runtime.interpreter as tflite
